@@ -6,7 +6,10 @@ const personajeService = new PersonajeService();
 
 router.get('', async (req, res) => {
     console.log(`This is a get operation`);
-    return res.status(200).json();
+
+    const Personaje = await personajeService.getPersonaje();
+
+    return res.status(200).json(Personaje);
   });
 
     router.get('/:id', async (req, res) => {
@@ -15,7 +18,7 @@ router.get('', async (req, res) => {
   
     const Personaje = await personajeService.getPersonajeById(req.params.id);
   
-    return res.status(200).json();
+    return res.status(200).json(Personaje);
   });
   
   router.post('', async (req, res) => {
@@ -23,7 +26,7 @@ router.get('', async (req, res) => {
   
     const Personaje = await personajeService.createPersonaje(req.body);
   
-    return res.status(201).json();
+    return res.status(201).json(Personaje);
   });
   
   router.put('/:id', async (req, res) => {
@@ -32,7 +35,7 @@ router.get('', async (req, res) => {
   
     const Personaje = await personajeService.updatePersonajeById(req.body);
   
-    return res.status(200).json();
+    return res.status(200).json(Personaje);
   });
   
   router.delete('/:id', async (req, res) => {
@@ -41,7 +44,7 @@ router.get('', async (req, res) => {
   
     const Personaje = await personajeService.deletePersonajeById(req.params.id);
   
-    return res.status(200).json();
+    return res.status(200).json(Personaje);
   });
   
 
