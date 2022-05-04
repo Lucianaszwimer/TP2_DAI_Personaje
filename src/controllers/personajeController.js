@@ -33,7 +33,7 @@ router.get('', async (req, res) => {
     console.log(`Request URL Param: ${req.params.id}`);
     console.log(`This is a put operation`);
   
-    const Personaje = await personajeService.updatePersonajeById(req.body);
+    const Personaje = await personajeService.updatePersonajeById(req.params.id, req.body);
   
     return res.status(200).json(Personaje);
   });
