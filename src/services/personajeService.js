@@ -1,16 +1,37 @@
 import sql from 'mssql'
 import config from '../../db.js'
 import 'dotenv/config'
+import e from 'express';
 
 const PersonajeTabla = process.env.DB_TABLA_PERSONAJE;
 
 export class PersonajeService {
 
     //obtiene/muestra todos los personajes
-    getPersonaje = async () => {
+    getPersonaje = async (Nombre, Edad) => {
         console.log('This is a function on the service');
         const pool = await sql.connect(config);
-        const response = await pool.request().query(`SELECT * from ${PersonajeTabla}`);
+        let response;
+    //obtiene por nombre
+        if (Edad && Nombre){
+            response = await pool.request()
+            .input('Edad',sql.Int, Edad)
+            .input('Nombre',sql.NChar, Nombre)
+            .query(`SELECT * from ${PersonajeTabla} where Nombre = @Nombre AND Edad = @Edad`);
+        } else if (Nombre && !Edad) {
+            response = await pool.request()
+            .input('Nombre',sql.NChar, Nombre)
+            .query(`SELECT * from ${PersonajeTabla} where Nombre = @Nombre`);
+        } else if (Edad && !Nombre){
+            //obtiene por edad
+            response = await pool.request()
+            .input('Edad',sql.Int, Edad)
+            .query(`SELECT * from ${PersonajeTabla} where Edad = @Edad`);
+        } else {
+            response = await pool.request()
+            .query(`SELECT * from ${PersonajeTabla}`)
+        }
+
         console.log(response)
 
         return response.recordset;
