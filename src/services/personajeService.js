@@ -8,16 +8,17 @@ const PersonajeTabla = process.env.DB_TABLA_PERSONAJE;
 export class PersonajeService {
 
     //obtiene/muestra todos los personajes
-    getPersonaje = async (Nombre, Edad) => {
+    getPersonaje = async (Nombre, Edad, IdPelicula) => {
         console.log('This is a function on the service');
         const pool = await sql.connect(config);
         let response;
     //obtiene por nombre
-        if (Edad && Nombre){
+        if (Edad && Nombre && IdPelicula){
             response = await pool.request()
             .input('Edad',sql.Int, Edad)
             .input('Nombre',sql.NChar, Nombre)
-            .query(`SELECT * from ${PersonajeTabla} where Nombre = @Nombre AND Edad = @Edad`);
+            .input('IdPelicula', sql.Int, IdPelicula)
+            .query(`SELECT * from ${PersonajeTabla} where Nombre = @Nombre AND Edad = @Edad AND IdPelicula = @IdPelicula`);
         } else if (Nombre && !Edad) {
             response = await pool.request()
             .input('Nombre',sql.NChar, Nombre)

@@ -10,6 +10,9 @@ app.use(express.json());
 
 app.use("/personaje", PersonajeRouter);
 
+passport.use(jwtStrategy);
+app.use(passport.initialize());
+
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
