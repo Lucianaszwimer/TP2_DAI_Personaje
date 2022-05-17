@@ -8,27 +8,52 @@ const PersonajeTabla = process.env.DB_TABLA_PERSONAJE;
 export class PersonajeService {
 
     //obtiene/muestra todos los personajes
-    getPersonaje = async (Nombre, Edad, IdPelicula) => {
+    getPersonaje = async (Nombre, Edad, Id) => {
         console.log('This is a function on the service');
         const pool = await sql.connect(config);
         let response;
-    //obtiene por nombre
-        if (Edad && Nombre && IdPelicula){
+        if (Edad && Nombre && Id){
+            //obtiene por edad, nombre y id
             response = await pool.request()
             .input('Edad',sql.Int, Edad)
             .input('Nombre',sql.NChar, Nombre)
-            .input('IdPelicula', sql.Int, IdPelicula)
-            .query(`SELECT * from ${PersonajeTabla} where Nombre = @Nombre AND Edad = @Edad AND IdPelicula = @IdPelicula`);
-        } else if (Nombre && !Edad) {
+            .input('Id', sql.Int, Id)
+            .query(`SELECT * from ${PersonajeTabla} where Nombre = @Nombre AND Edad = @Edad AND Id = @Id`);
+        } else if (Nombre && Id && !Edad) {
+            //obtiene por nombre y id
             response = await pool.request()
             .input('Nombre',sql.NChar, Nombre)
-            .query(`SELECT * from ${PersonajeTabla} where Nombre = @Nombre`);
-        } else if (Edad && !Nombre){
-            //obtiene por edad
+            .input('Id', sql.Int, Id)
+            .query(`SELECT * from ${PersonajeTabla} where Nombre = @Nombre AND Id = @Id`);
+        } else if (Id && Edad && !Nombre){
+            //obtiene por edad y por id
+            response = await pool.request()
+            .input('Edad',sql.Int, Edad)
+            .input('Id', sql.Int, Id)
+            .query(`SELECT * from ${PersonajeTabla} where Edad = @Edad AND Id = @Id`);
+        } else if (Edad && Nombre && !Id){
+            //obtiene por edad y por nombre
+            response = await pool.request()
+            .input('Edad',sql.Int, Edad)
+            .input('Nombre',sql.NChar, Nombre)
+            .query(`SELECT * from ${PersonajeTabla} where Edad = @Edad AND Nombre = @Nombre`);
+        }else if (Edad && !Nombre && !Id){
+             //obtiene por edad
             response = await pool.request()
             .input('Edad',sql.Int, Edad)
             .query(`SELECT * from ${PersonajeTabla} where Edad = @Edad`);
-        } else {
+        }else if (!Edad && Nombre && !Id){
+            //obtiene por nombre
+            response = await pool.request()
+            .input('Nombre',sql.NChar, Nombre)
+            .query(`SELECT * from ${PersonajeTabla} where Nombre = @Nombre`);
+        }else if (!Edad && !Nombre && Id){
+            //obtiene por id
+            response = await pool.request()
+            .input('Id', sql.Int, Id)
+            .query(`SELECT * from ${PersonajeTabla} where Id = @Id`);
+        }else {
+            //obtiene todo
             response = await pool.request()
             .query(`SELECT * from ${PersonajeTabla}`)
         }

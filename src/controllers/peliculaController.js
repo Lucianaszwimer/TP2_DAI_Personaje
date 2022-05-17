@@ -6,9 +6,8 @@ const peliculaService = new PeliculaService();
 
 router.get('', async (req, res) => {
     console.log(`This is a get operation`);
-console.log(req.query.nombre);
     let Pelicula;
-      Pelicula = await PeliculaService.getPelicula(req.query.nombre);
+      Pelicula = await peliculaService.getPelicula(req.query.idpelicula, req.query.imagen, req.query.titulo, req.query.fechadecreacion);
 
     return res.status(200).json(Pelicula);
   });
