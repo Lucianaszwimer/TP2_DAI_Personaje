@@ -8,5 +8,5 @@
 6. *Busqueda personaje GET /characters?movies=idMovie*LISTO
 7. *Listado de pelicula* LISTO 
 8. Detalle pelicula con sus personajes
-9. CRUD pelicula
+9. *CRUD pelicula*LISTO
 10. *Busqueda de pelicula GET /movies?name=nombre* LISTO FALTA ->  GET /movies?order=ASC | DESC

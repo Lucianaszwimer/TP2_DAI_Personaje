@@ -7,7 +7,7 @@ const personajeService = new PersonajeService();
 router.get('', async (req, res) => {
     console.log(`This is a get operation`);
     let Personaje;
-      Personaje = await personajeService.getPersonaje(req.query.nombre, req.query.edad, req.query.id);
+      Personaje = await personajeService.getPersonaje(req.query.name, req.query.age, req.query.id);
 
     return res.status(200).json(Personaje);
   });

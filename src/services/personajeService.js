@@ -55,7 +55,7 @@ export class PersonajeService {
         }else {
             //obtiene todo
             response = await pool.request()
-            .query(`SELECT * from ${PersonajeTabla}`)
+            .query(`SELECT Id, Nombre, Imagen from ${PersonajeTabla}`)
         }
 
         console.log(response)
@@ -63,7 +63,7 @@ export class PersonajeService {
         return response.recordset;
     }
 
-    //obtiene/muestra personaje
+    //obtiene/muestra personaje por id
     getPersonajeById = async (Id) => {
         console.log('This is a function on the service');
 

@@ -9,8 +9,8 @@ const port = 5000;
 app.use(cors());
 app.use(express.json());
 
-app.use("/personaje", PersonajeRouter);
-app.use("/pelicula", PeliculaRouter);
+app.use("/characters", PersonajeRouter);
+app.use("/movies", PeliculaRouter);
 
 /*
 passport.use(jwtStrategy);

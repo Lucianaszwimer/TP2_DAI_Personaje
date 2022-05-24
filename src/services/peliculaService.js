@@ -11,20 +11,35 @@ export class PeliculaService {
         //Obtiene todas las Peliculas
         console.log('This is a function on the service');
         const pool = await sql.connect(config);
-        const response = await pool.request()
-        .input('IdPelicula',sql.Int, IdPelicula)
-        .input('Imagen',sql.VarChar(200), Imagen)
-        .input('Titulo',sql.VarChar(200), Titulo)
-        .input('FechaDeCreacion',sql.Date, FechaDeCreacion)
-        .query(`SELECT IdPelicula, Imagen, Titulo, FechaDeCreacion from ${PeliculaTabla}`);        
+        let response;
+
+        if(Titulo){
+            //obtiene por titulo
+            response = await pool.request()
+            .input('IdPelicula',sql.Int, IdPelicula)
+            .input('Imagen',sql.VarChar(200), Imagen)
+            .input('Titulo',sql.VarChar(200), Titulo)
+            .input('FechaDeCreacion',sql.Date, FechaDeCreacion)
+            .query(`SELECT IdPelicula, Imagen, Titulo, FechaDeCreacion from ${PeliculaTabla} where Titulo = @Titulo`);
+        } else{
+            // obtiene todo
+            response = await pool.request()
+            .input('IdPelicula',sql.Int, IdPelicula)
+            .input('Imagen',sql.VarChar(200), Imagen)
+            .input('Titulo',sql.VarChar(200), Titulo)
+            .input('FechaDeCreacion',sql.Date, FechaDeCreacion)
+            .query(`SELECT IdPelicula, Imagen, Titulo, FechaDeCreacion from ${PeliculaTabla}`);
+        }
+               
         console.log(response)
 
         return response.recordset;
     }
 
-    //obtiene/muestra personaje
+    //obtiene/muestra pelicula por id
     getPeliculaById = async (IdPelicula) => {
         console.log('This is a function on the service');
+
         const pool = await sql.connect(config);
         const response = await pool.request()
             .input('IdPelicula',sql.Int, IdPelicula)
@@ -39,39 +54,38 @@ export class PeliculaService {
         console.log('This is a function on the service');
         const pool = await sql.connect(config);
         const response = await pool.request()
-            .input('IdPelicula',sql.Int, Pelicula?.IdPelicula ?? '')
             .input('Imagen',sql.NChar, Pelicula?.Imagen ?? '')
             .input('Titulo',sql.NChar, Pelicula?.Titulo ?? '')
             .input('FechaDeCreacion',sql.Date, Pelicula?.FechaDeCreacion ?? '')
             .input('Calificacion',sql.NChar, Pelicula?.Calificacion ?? '')
-            .query(`INSERT INTO ${PeliculaTabla} (IdPelicula, Imagen, Titulo, FechaDeCreacion, Calificacion) VALUES (@IdPelicula, @Imagen, @Titulo, @FechaDeCreacion, @Calificacion)`);
+            .query(`INSERT INTO ${PeliculaTabla} (Imagen, Titulo, FechaDeCreacion, Calificacion) VALUES (@Imagen, @Titulo, @FechaDeCreacion, @Calificacion)`);
         console.log(response)
 
         return response.recordset;
     }
 
     //actualiza Pelicula
-    updatePeliculaById = async (Id, Pelicula) => {
+    updatePeliculaById = async (IdPelicula, Pelicula) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
         const response = await pool.request()
-            .input ('Id', sql.Int, Id?? '')
+            .input ('IdPelicula', sql.Int, IdPelicula?? '')
             .input('Titulo',sql.NChar, Pelicula?.Titulo ?? '')
-            .query(`UPDATE Pelicula SET Titulo = @Titulo WHERE Id = @Id`);
+            .query(`UPDATE Pelicula SET Titulo = @Titulo WHERE IdPelicula = @IdPelicula`);
         console.log(response)
 
         return response.recordset;
     }
 
     //Elimino pelicula
-    deletePeliculaById = async (Id) => {
+    deletePeliculaById = async (IdPelicula) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
         const response = await pool.request()
-            .input('Id',sql.Int, Id)
-            .query(`DELETE FROM ${PeliculaTabla} WHERE Id = @Id`);
+            .input('IdPelicula',sql.Int, IdPelicula)
+            .query(`DELETE FROM ${PeliculaTabla} WHERE IdPelicula = @IdPelicula`);
         console.log(response)
 
         return response.recordset;
