@@ -4,6 +4,7 @@ import 'dotenv/config'
 import e from 'express';
 
 const PersonajeTabla = process.env.DB_TABLA_PERSONAJE;
+const PersonajexPeliculaTabla = process.env.DB_TABLA_PERSONAJEXPELICULA;
 
 export class PersonajeService {
 
@@ -47,7 +48,7 @@ export class PersonajeService {
             response = await pool.request()
             .input('Nombre',sql.NChar, Nombre)
             .query(`SELECT * from ${PersonajeTabla} where Nombre = @Nombre`);
-        }else if (!Edad && !Nombre && Id){
+         }else if (!Edad && !Nombre && Id){
             //obtiene por id
             response = await pool.request()
             .input('Id', sql.Int, Id)
@@ -64,15 +65,16 @@ export class PersonajeService {
     }
 
     //obtiene/muestra personaje por id
-    getPersonajeById = async (Id) => {
+    getPersonajeById = async (Id, Nombre) => {
         console.log('This is a function on the service');
-
         const pool = await sql.connect(config);
         const response = await pool.request()
             .input('Id',sql.Int, Id)
-            .query(`SELECT * from ${PersonajeTabla} where Id = @Id`);
-        console.log(response)
+            .input('Nombre',sql.NChar, Nombre)
+            .query(`SELECT Id, Nombre from ${PersonajeTabla} where Id = @Id INNER JOIN ${PersonajexPeliculaTabla} ON Personaje.Id = PersonajexPelicula.IdPelicula`);
 
+        console.log(response)
+        
         return response.recordset[0];
     }
 
