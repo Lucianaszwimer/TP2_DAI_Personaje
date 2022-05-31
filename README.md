@@ -1,12 +1,12 @@
 # TP2_Personajes
 
-1. *Hacer tabla de personaje y pelicula*LISTO
+1. LISTO
 2. Autenticacion
-3. *Listado de personaje*LISTO
-4. *CRUD personaje*LISTO
+3. LISTO
+4. LISTO
 5. *Detalle personaje* FALTA IDMOVIE
-6. *Busqueda personaje GET /characters?movies=idMovie*LISTO
-7. *Listado de pelicula* LISTO 
+6. LISTO
+7. LISTO 
 8. Detalle pelicula con sus personajes
-9. *CRUD pelicula*LISTO
+9. LISTO
 10. *Busqueda de pelicula GET /movies?name=nombre* LISTO FALTA ->  GET /movies?order=ASC | DESC

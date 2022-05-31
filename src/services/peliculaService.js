@@ -4,6 +4,8 @@ import 'dotenv/config'
 import e from 'express';
 
 const PeliculaTabla = process.env.DB_TABLA_PELICULA;
+const PersonajeTabla = process.env.DB_TABLA_PERSONAJE;
+const PersonajexPeliculaTabla = process.env.DB_TABLA_PERSONAJEXPELICULA;
 
 export class PeliculaService {
 
@@ -28,7 +30,7 @@ export class PeliculaService {
             .input('Imagen',sql.VarChar(200), Imagen)
             .input('Titulo',sql.VarChar(200), Titulo)
             .input('FechaDeCreacion',sql.Date, FechaDeCreacion)
-            .query(`SELECT IdPelicula, Imagen, Titulo, FechaDeCreacion from ${PeliculaTabla}`);
+            .query(`SELECT IdPelicula, Imagen, Titulo, FechaDeCreacion from ${PeliculaTabla} ORDER BY FechaDeCreacion ASC`);
         }
                
         console.log(response)
@@ -91,5 +93,23 @@ export class PeliculaService {
         return response.recordset;
     }
 
-    
+    //detalle de la pelicula y asocia con personaje de la misma
+    getDetallePelicula = async (IdPelicula, Id) => {
+        let Pelicula;
+        let Personaje;
+        const pool = await sql.connect(config);
+        Pelicula = await pool.request()
+            .input('IdPelicula', sql.Int, IdPelicula)
+            .query(`SELECT * FROM ${PeliculaTabla} where IdPelicula = @IdPelicula`);
+
+        Personaje = await pool.request()
+            .input('Id', sql.Int, Id)
+            .query(`SELECT p.Id, p.Imagen, p.Nombre, p.Peso, p.Historia from ${PersonajeTabla} p INNER JOIN ${PersonajexPeliculaTabla} on p.Id = ${PersonajexPeliculaTabla}.Id INNER JOIN ${PeliculaTabla} on ${PeliculaTabla}.IdPelicula = ${PersonajexPeliculaTabla}.IdPelicula and ${PeliculaTabla}.IdPelicula = @IdPelicula`);
+
+        Pelicula.recordset[0].PersonajesAsociados = Personaje.recordset;
+
+
+        return Pelicula.recordset;
+    }
+
 }

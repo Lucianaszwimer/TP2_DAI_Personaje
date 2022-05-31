@@ -5,7 +5,7 @@ const router = Router();
 const peliculaService = new PeliculaService();
 
 // get pelicula
-router.get('', async (req, res) => {
+router.get('/get', async (req, res) => {
     console.log(`This is a get operation`);
     let Pelicula;
       Pelicula = await peliculaService.getPelicula(req.query.idpelicula, req.query.imagen, req.query.name, req.query.fechadecreacion);
@@ -21,7 +21,7 @@ router.get('', async (req, res) => {
     const Pelicula = await peliculaService.getPeliculaById(req.params.idpelicula);
   
     return res.status(200).json(Pelicula);
-  });
+  }); 
 
 // crear pelicula
   router.post('', async (req, res) => {
@@ -52,6 +52,16 @@ router.get('', async (req, res) => {
   
     return res.status(200).json(Pelicula);
   });
+
+  /* detalle pelicula y asocia con personaje de la misma
+  router.get('', async (req, res) => {
+    console.log(`Request URL Param: ${req.query.idPelicula}`);
+    console.log("Entro al detalle")
+    const Pelicula = await peliculaService.getDetallePelicula(req.query.idPelicula);
+
+    return res.status(200).json(Pelicula);
+
+  })*/
   
 
   export default router;

@@ -71,7 +71,7 @@ export class PersonajeService {
         const response = await pool.request()
             .input('Id',sql.Int, Id)
             .input('Nombre',sql.NChar, Nombre)
-            .query(`SELECT Id, Nombre from ${PersonajeTabla} where Id = @Id INNER JOIN ${PersonajexPeliculaTabla} ON Personaje.Id = PersonajexPelicula.IdPelicula`);
+            .query(`SELECT Id, Nombre from ${PersonajeTabla} where Id = @Id `);
 
         console.log(response)
         
