@@ -3,6 +3,5 @@ export class Pelicula {
     Imagen;
     Titulo;
     FechaDeCreacion;
-    Calificacion;
-    PersonajesAsociados
+    Calificacion
 }

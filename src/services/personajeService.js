@@ -4,6 +4,7 @@ import 'dotenv/config'
 import e from 'express';
 
 const PersonajeTabla = process.env.DB_TABLA_PERSONAJE;
+const PeliculaTabla = process.env.DB_TABLA_PELICULA;
 const PersonajexPeliculaTabla = process.env.DB_TABLA_PERSONAJEXPELICULA;
 
 export class PersonajeService {
@@ -65,7 +66,7 @@ export class PersonajeService {
     }
 
     //obtiene/muestra personaje por id
-    getPersonajeById = async (Id, Nombre) => {
+  /*  getPersonajeById = async (Id, Nombre) => {
         console.log('This is a function on the service');
         const pool = await sql.connect(config);
         const response = await pool.request()
@@ -76,7 +77,7 @@ export class PersonajeService {
         console.log(response)
         
         return response.recordset[0];
-    }
+    }*/
 
     //crea personaje
     createPersonaje = async (Personaje) => {
@@ -125,6 +126,28 @@ export class PersonajeService {
         console.log(response)
 
         return response.recordset;
+    }
+
+    // detalle de personaje 
+    getDetallePersonaje = async (Id) => {
+        let Pelicula;
+        let Personaje;
+        const pool = await sql.connect(config);
+        Personaje = await pool.request()
+            .input('Id', sql.Int, Id)
+            .query(`SELECT * FROM ${PersonajeTabla} where Id = @Id`);
+
+        Pelicula = await pool.request()
+            .input('Id', sql.Int, Id)
+            .query(`SELECT Pelicula.IdPelicula, Pelicula.Titulo from ${PeliculaTabla} 
+            INNER JOIN PersonajexPelicula on Pelicula.IdPelicula = PersonajexPelicula.IdPelicula 
+            INNER JOIN Personajes on Personajes.Id = PersonajexPelicula.IdPersonaje and
+            Personajes.Id = @Id`);
+        let ambas;
+        ambas = [Pelicula.recordset, Personaje.recordset];
+
+        return ambas;
+        
     }
 }
 

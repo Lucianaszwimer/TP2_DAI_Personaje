@@ -1,32 +1,15 @@
-import jwt from "jsonwebtoken";
-import "dotenv/config";
-import router from "./personajeController";
+import { Router } from 'express';
+import { authService } from '../services/authService.js';
 
-router.get('', Authenticate, async (req, res) => {
+const router = Router();
+const AuthService = new authService();
+
+router.get('', async (req, res) => {
+    
+    const token= await  AuthService.getToken();
+    console.log(token);
+    return res.status(200).json(token);
+
 });
 
-router.get('/:id', Authenticate, async (req, res) => {
-});
-
-router.post('', Authenticate, async (req, res) => {
-});
-
-router.put('/:id', Authenticate, async (req, res) => {
-});
-
-router.delete('/:id', Authenticate, async (req, res) => {
-});
-
-const getRandomString = () => {
-    var result = "";
-    var characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < 18; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-  
-    return result;
-  };
-
-  export default router;
+export default router;

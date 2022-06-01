@@ -39,7 +39,7 @@ export class PeliculaService {
     }
 
     //obtiene/muestra pelicula por id
-    getPeliculaById = async (IdPelicula) => {
+    /*getPeliculaById = async (IdPelicula) => {
         console.log('This is a function on the service');
 
         const pool = await sql.connect(config);
@@ -49,7 +49,7 @@ export class PeliculaService {
         console.log(response)
 
         return response.recordset[0];
-    }
+    }*/
 
     //crea Pelicula
     createPelicula = async (Pelicula) => {
@@ -94,22 +94,25 @@ export class PeliculaService {
     }
 
     //detalle de la pelicula y asocia con personaje de la misma
-    getDetallePelicula = async (IdPelicula, Id) => {
+    getDetallePelicula = async (Id) => {
         let Pelicula;
         let Personaje;
         const pool = await sql.connect(config);
         Pelicula = await pool.request()
-            .input('IdPelicula', sql.Int, IdPelicula)
-            .query(`SELECT * FROM ${PeliculaTabla} where IdPelicula = @IdPelicula`);
+            .input('Id', sql.Int, Id)
+            .query(`SELECT * FROM ${PeliculaTabla} where IdPelicula = @Id`);
 
         Personaje = await pool.request()
             .input('Id', sql.Int, Id)
-            .query(`SELECT p.Id, p.Imagen, p.Nombre, p.Peso, p.Historia from ${PersonajeTabla} p INNER JOIN ${PersonajexPeliculaTabla} on p.Id = ${PersonajexPeliculaTabla}.Id INNER JOIN ${PeliculaTabla} on ${PeliculaTabla}.IdPelicula = ${PersonajexPeliculaTabla}.IdPelicula and ${PeliculaTabla}.IdPelicula = @IdPelicula`);
+            .query(`SELECT Personajes.Id, Personajes.Nombre from ${PersonajeTabla} 
+            INNER JOIN PersonajexPelicula on Personajes.Id = PersonajexPelicula.IdPersonaje 
+            INNER JOIN Pelicula on Pelicula.IdPelicula = PersonajexPelicula.IdPelicula and
+            Pelicula.IdPelicula = @Id`);
+        let ambas;
+        ambas = [Pelicula.recordset, Personaje.recordset];
 
-        Pelicula.recordset[0].PersonajesAsociados = Personaje.recordset;
-
-
-        return Pelicula.recordset;
+        return ambas;
+        
     }
 
 }
