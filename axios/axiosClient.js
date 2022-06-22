@@ -6,11 +6,14 @@ const axiosClient = axios.create ({
 })
 
 export const getPersonaje = async () => {
-    return axiosClient.get ('/characters').then(response => {
+    return axiosClient.get ('/characters')
+    .then(response => {
         if ( response.status < 300){
             return response.data
         } else {
             console.log("Algo anduvo mal")
         }
+    }) .catch(error => {
+        console.log(error)
     })
 }
